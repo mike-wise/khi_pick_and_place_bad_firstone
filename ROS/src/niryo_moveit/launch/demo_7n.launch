@@ -1,6 +1,6 @@
 <launch>
     <arg name="urdf_without_meshes" default="false" />
-    <include file="$(find niryo_moveit)/launch/rs007n_base.launch" pass_all_args="true"/>
+    <include file="$(find niryo_moveit)/launch/rs007n_o_base.launch" pass_all_args="true"/>
 
     <include file="$(find niryo_moveit)/launch/controllers.launch">
         <arg name="simulation_mode" value="true" />
