@@ -11,7 +11,8 @@ from moveit_msgs.msg import RobotTrajectory
 
 
 def callback(data):
-    rospy.loginfo(rospy.get_caller_id() + "I heard:\n%s", data)
+    rospy.loginfo(rospy.get_caller_id() + "|I heard:\n%s", data)
+    rospy.loginfo("type:\n%s", type(data))
 
 def listener():
     rospy.init_node('Trajectory_Subscriber', anonymous=True)

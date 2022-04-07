@@ -19,8 +19,10 @@ from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
 
 from niryo_moveit.srv import MoverService, MoverServiceRequest, MoverServiceResponse
+print("loading niryo_moveit:mover.py")
 
 joint_names = ['joint_1', 'joint_2', 'joint_3', 'joint_4', 'joint_5', 'joint_6']
+print("joint_names",joint_names)
 
 # Between Melodic and Noetic, the return type of plan() changed. moveit_commander has no __version__ variable, so checking the python version as a proxy
 if sys.version_info >= (3, 0):
@@ -34,16 +36,26 @@ else:
     Given the start angles of the robot, plan a trajectory that ends at the destination pose.
 """
 def plan_trajectory(move_group, destination_pose, start_joint_angles): 
+    print("niryo_moveit:mover.py:plan_trajectory")
+    print("    move_group:",move_group)
+    print("    destination_pose:",destination_pose)
+    print("    start_joint_angles:",start_joint_angles)
+    print("    ------------------")
     current_joint_state = JointState()
+    print("    current_joint_state:",current_joint_state)
     current_joint_state.name = joint_names
     current_joint_state.position = start_joint_angles
 
     moveit_robot_state = RobotState()
+    print("    moveit_robot_state:",moveit_robot_state)
     moveit_robot_state.joint_state = current_joint_state
     move_group.set_start_state(moveit_robot_state)
 
     move_group.set_pose_target(destination_pose)
+    print("    calculating plan")   
     plan = move_group.plan()
+    print("    plan:",plan)   
+    
 
     if not plan:
         exception_str = """
@@ -51,7 +63,8 @@ def plan_trajectory(move_group, destination_pose, start_joint_angles):
             Please make sure target and destination are reachable by the robot.
         """.format(destination_pose, destination_pose)
         raise Exception(exception_str)
-
+        
+    print("    returning plan")   
     return planCompat(plan)
 
 
@@ -70,6 +83,8 @@ def plan_trajectory(move_group, destination_pose, start_joint_angles):
     https://github.com/ros-planning/moveit/blob/master/moveit_commander/src/moveit_commander/move_group.py
 """
 def plan_pick_and_place(req):
+    print("niryo_moveit:mover.py:plan_pick_and_place")
+    print("    req:",req)
     response = MoverServiceResponse()
 
     group_name = "arm"
@@ -126,7 +141,7 @@ def moveit_server():
     rospy.init_node('niryo_moveit_server')
 
     s = rospy.Service('niryo_moveit', MoverService, plan_pick_and_place)
-    print("Ready to plan")
+    print("niryo_moveit:mover.py:Ready to plan - spinning")
     rospy.spin()
 
 
