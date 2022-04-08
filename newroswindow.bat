@@ -1,1 +1,1 @@
-docker exec -it zen_shaw /bin/bash
+docker exec -it ros-runner /bin/bash
